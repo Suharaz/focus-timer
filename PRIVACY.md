@@ -6,7 +6,7 @@
 
 Focus Timer is a browser extension designed to help you track and manage your time spent on websites. We are committed to protecting your privacy and being transparent about our data practices.
 
-**This extension is open source.** You can review the complete source code at: [GitHub Repository URL]
+**This extension is open source.** You can review the complete source code at: https://github.com/Suharaz/focus-timer
 
 ## Data Collection
 
@@ -92,7 +92,7 @@ This extension is **100% open source**. You can:
 - Contribute improvements
 - Fork and modify for your needs
 
-**Repository:** [GitHub URL]
+**Repository:** https://github.com/Suharaz/focus-timer
 
 ## Children's Privacy
 
