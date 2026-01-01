@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup">
+    <!-- Header with streak and home button -->
+    <header class="header">
+      <div class="header-left">
+        <h1 class="title">Focus Timer</h1>
+      </div>
+      <div class="header-right">
+        <div class="streak" id="streak">
+          <span class="streak-fire">🔥</span>
+          <span class="streak-count">0</span>
+          <span class="streak-label">days</span>
+        </div>
+        <button class="home-btn" id="home-btn" title="Dashboard">🏠</button>
+      </div>
+    </header>
+
+    <!-- Today summary -->
+    <div class="summary" id="summary">
+      <div class="summary-label">Today</div>
+      <div class="summary-time" id="total-time">0m</div>
+    </div>
+
+    <!-- Domain list -->
+    <div class="domains" id="domains">
+      <div class="empty">Start browsing to track time!</div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

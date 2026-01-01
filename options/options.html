@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Focus Timer</title>
+  <link rel="stylesheet" href="options.css">
+  <script src="../lib/chart.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-title">
+        <span class="header-icon">🎯</span>
+        <h1>Focus Timer</h1>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="tracking-enabled" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="dashboard">📊 Dashboard</button>
+      <button class="tab-btn" data-tab="habits">🎯 Habits</button>
+      <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
+    </nav>
+
+    <!-- ============ DASHBOARD TAB ============ -->
+    <div class="tab-content active" id="tab-dashboard">
+      <!-- Period Selector -->
+      <div class="period-selector">
+        <button class="period-btn active" data-period="week">Week</button>
+        <button class="period-btn" data-period="month">Month</button>
+        <button class="period-btn" data-period="all">All</button>
+      </div>
+
+      <!-- Summary Cards -->
+      <section class="summary-cards">
+        <div class="summary-card">
+          <div class="summary-icon">⏱️</div>
+          <div class="summary-value" id="total-time">0h 0m</div>
+          <div class="summary-label">Total Time</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-icon">📊</div>
+          <div class="summary-value" id="avg-daily">0h 0m</div>
+          <div class="summary-label">Daily Avg</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-icon">🔥</div>
+          <div class="summary-value" id="streak-count">0</div>
+          <div class="summary-label">Streak</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-icon">🌐</div>
+          <div class="summary-value" id="domains-count">0</div>
+          <div class="summary-label">Domains</div>
+        </div>
+      </section>
+
+      <!-- Daily Chart -->
+      <section class="chart-card">
+        <h2>📈 Daily Usage</h2>
+        <div class="chart-container">
+          <canvas id="daily-chart"></canvas>
+        </div>
+      </section>
+
+      <!-- Top Domains Chart -->
+      <section class="chart-card">
+        <h2>🥇 Top Domains</h2>
+        <div class="chart-container chart-pie">
+          <canvas id="domains-chart"></canvas>
+        </div>
+      </section>
+
+      <!-- Domain Details -->
+      <section class="card">
+        <h2>📋 Domain Breakdown</h2>
+        <div id="domain-details"></div>
+      </section>
+    </div>
+
+    <!-- ============ HABITS TAB ============ -->    <div class="tab-content" id="tab-habits">      <div class="period-selector">        <button class="habit-period-btn active" data-period="week">Week</button>        <button class="habit-period-btn" data-period="month">Month</button>      </div>      <section class="card heatmap-card">        <div class="heatmap-header">          <button class="nav-btn" id="habit-prev">◀</button>          <h2 id="heatmap-title">This Week</h2>          <button class="nav-btn" id="habit-next">▶</button>        </div>        <div class="heatmap-grid" id="heatmap-grid"></div>        <div class="heatmap-legend">          <span class="legend-text">Less</span>          <div class="legend-circles">            <span class="legend-circle size-0"></span>            <span class="legend-circle size-1"></span>            <span class="legend-circle size-2"></span>            <span class="legend-circle size-3"></span>            <span class="legend-circle size-4"></span>          </div>          <span class="legend-text">More</span>        </div>      </section>      <div class="day-detail-popup" id="day-detail-popup" style="display:none;">        <div class="popup-header">          <h3 id="popup-date">--</h3>          <button class="popup-close" id="popup-close">×</button>        </div>        <div class="popup-content" id="popup-content"></div>      </div>      <section class="card">        <h2>📊 Habit Summary</h2>        <div id="habit-summary" class="habit-summary">          <div class="empty-state">No habits tracked yet</div>        </div>      </section>    </div>    <!-- ============ SETTINGS TAB ============ -->
+    <div class="tab-content" id="tab-settings">
+      <!-- Quick Stats -->
+      <section class="stats-bar">
+        <div class="stat">
+          <span class="stat-value" id="stat-streak">0</span>
+          <span class="stat-label">🔥 Streak</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="stat-today">0m</span>
+          <span class="stat-label">⏱️ Today</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="stat-domains">0</span>
+          <span class="stat-label">🌐 Tracked</span>
+        </div>
+      </section>
+
+      <!-- Add Limit -->
+      <section class="card add-limit-card">
+        <h2>⚡ Set Daily Limit</h2>
+        <div class="add-limit-form">
+          <input type="text" id="new-domain" placeholder="youtube.com" class="input-domain">
+          <div class="input-time-wrapper">
+            <input type="number" id="new-limit" placeholder="30" min="1" max="1440" class="input-time">
+            <span class="input-suffix">min</span>
+          </div>
+          <button id="add-btn" class="btn-add">+</button>
+        </div>
+      </section>
+
+      <!-- Limited Domains -->
+      <section class="card" id="limits-section">
+        <div class="card-header">
+          <h2>🚫 Limited Domains</h2>
+          <button class="btn-expand" id="expand-limits-btn" style="display:none;">
+            View all <span id="limits-count"></span>
+          </button>
+        </div>
+        <div class="limits-list" id="limits-list">
+          <div class="empty-state">No limits set yet</div>
+        </div>
+        <div class="limits-expanded" id="limits-expanded" style="display:none;"></div>
+      </section>
+
+      <!-- Reminders -->
+      <section class="card">
+        <div class="card-header">
+          <h2>🔔 Reminders</h2>
+          <button class="btn-expand" id="expand-reminders-btn" style="display:none;">
+            View all <span id="reminders-count"></span>
+          </button>
+        </div>
+        <div class="reminders-list" id="reminder-list">
+          <div class="empty-state">No reminders</div>
+        </div>
+
+        <!-- Legend -->
+        <div class="habit-legend">
+          <div class="legend-item"><span class="legend-dot done"></span>Done</div>
+          <div class="legend-item"><span class="legend-dot partial"></span>Partial</div>
+          <div class="legend-item"><span class="legend-dot skipped"></span>Skipped</div>
+          <div class="legend-item"><span class="legend-dot none"></span>Empty</div>
+        </div>
+
+        <div class="add-reminder-form">
+          <div class="reminder-row">
+            <button type="button" class="icon-picker-btn" id="icon-picker-btn">💧</button>
+            <div class="icon-picker-dropdown" id="icon-picker-dropdown">
+              <div class="icon-grid">
+                <button type="button" class="icon-option" data-icon="💧">💧</button>
+                <button type="button" class="icon-option" data-icon="☕">☕</button>
+                <button type="button" class="icon-option" data-icon="🧘">🧘</button>
+                <button type="button" class="icon-option" data-icon="👀">👀</button>
+                <button type="button" class="icon-option" data-icon="🚶">🚶</button>
+                <button type="button" class="icon-option" data-icon="💪">💪</button>
+                <button type="button" class="icon-option" data-icon="🍎">🍎</button>
+                <button type="button" class="icon-option" data-icon="😴">😴</button>
+                <button type="button" class="icon-option" data-icon="📚">📚</button>
+                <button type="button" class="icon-option" data-icon="✨">✨</button>
+                <button type="button" class="icon-option" data-icon="🎯">🎯</button>
+                <button type="button" class="icon-option" data-icon="⏰">⏰</button>
+              </div>
+            </div>
+            <select id="reminder-type" class="select-type">
+              <option value="interval">Every X min</option>
+              <option value="daily">Daily at</option>
+            </select>
+            <div id="interval-input" class="reminder-input">
+              <input type="number" id="reminder-interval" placeholder="30" min="1" class="input-small">
+              <span class="input-suffix">min</span>
+            </div>
+            <div id="daily-input" class="reminder-input" style="display:none;">
+              <input type="time" id="reminder-time" value="09:00" class="input-time-picker">
+            </div>
+            <input type="text" id="reminder-title" placeholder="Uống nước" class="input-title">
+          </div>
+          <div class="reminder-row">
+            <input type="text" id="reminder-actions" placeholder="Đã xong, Để sau, Bỏ qua" class="input-actions">
+            <button id="add-reminder-btn" class="btn-add">+</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Google Drive Sync -->
+      <section class="card sync-card">
+        <div class="sync-header">
+          <span class="sync-icon" id="sync-icon">☁️</span>
+          <div class="sync-info">
+            <span class="sync-state" id="sync-state">Google Drive</span>
+            <span class="sync-detail" id="sync-detail">Not connected</span>
+          </div>
+        </div>
+        <div class="sync-actions">
+          <button id="connect-btn" class="btn btn-primary">Connect</button>
+          <button id="backup-btn" class="btn" style="display:none;">Backup</button>
+          <button id="restore-btn" class="btn" style="display:none;">Restore</button>
+          <button id="disconnect-btn" class="btn btn-ghost" style="display:none;">Disconnect</button>
+        </div>
+      </section>
+
+      <!-- Danger Zone -->
+      <section class="card danger-card">
+        <button id="reset-btn" class="btn-danger-text">🗑️ Reset All Data</button>
+      </section>
+
+      <!-- Hidden reminder message input -->
+      <input type="hidden" id="reminder-message" value="">
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
